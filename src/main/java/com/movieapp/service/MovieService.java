@@ -59,8 +59,15 @@ public class MovieService implements BaseService<MovieTO> {
 	@Override
 	public boolean delete(MovieTO app) {
 		LOGGER.info("Inside delete method ::");
-		movieRepository.delete(ConverterUtility.convertMovieToToMovieEntity(app));
-		return true;
+		MovieEntity movieEntity = ConverterUtility.convertMovieToToMovieEntity(app);
+		movieEntity.setId(app.getId());
+		try {
+		  movieRepository.delete(movieEntity);
+		  return true;
+		}catch (Exception e) {
+			return false;
+		}
+		
 	}
 
 	@PostConstruct

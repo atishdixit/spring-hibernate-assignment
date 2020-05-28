@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.movieapp.entity.MovieEntity;
 import com.movieapp.model.MovieTO;
 import com.movieapp.response.ResponseMessage;
 import com.movieapp.service.BaseService;
@@ -88,6 +89,23 @@ public class MovieRestController {
 		LOGGER.info(" ===============Delete Movie===========");
 		ResponseMessage responseMessage = null;
 
+		if (movie.getId() != null) {
+			try {
+				MovieTO entity = movieService.getMovie(movie.getId());
+				if (entity == null) {
+					responseMessage = new ResponseMessage("deleteMovie", 400, "IN CORRECT MOVIE ID", "ID NOT FOUND",
+							movie);
+					return new ModelMap("response", responseMessage);
+				}
+			} catch (Exception e) {
+				responseMessage = new ResponseMessage("deleteMovie", 400, "IN CORRECT MOVIE ID", "ID NOT FOUND", movie);
+				return new ModelMap("response", responseMessage);
+			}
+		} else {
+			responseMessage = new ResponseMessage("deleteMovie", 400, "IN CORRECT MOVIE ID", "ID NOT FOUND", movie);
+			return new ModelMap("response", responseMessage);
+		}
+
 		boolean status = movieService.delete(movie);
 		if (status) {
 			LOGGER.debug("movie delete successfully  :: " + movie);
@@ -116,13 +134,27 @@ public class MovieRestController {
 		LOGGER.info(" ===============Update Movie ===========");
 		ResponseMessage responseMessage = null;
 
-		if (movie != null) {
-			if (!verifyRating(movie.getRating())) {
-				responseMessage = new ResponseMessage("updateMovie", 400, "NOT UPDATED",
-						"Incorrect rating, Should be in rang( 0.5 to 5.0)", movie);
+		if (movie.getId() != null) {
+			try {
+				MovieTO entity = movieService.getMovie(movie.getId());
+				if (entity == null) {
+					responseMessage = new ResponseMessage("updateMovie", 400, "IN CORRECT MOVIE ID", "ID NOT FOUND",
+							movie);
+					return new ModelMap("response", responseMessage);
+				}
+			} catch (Exception e) {
+				responseMessage = new ResponseMessage("updateMovie", 400, "IN CORRECT MOVIE ID", "ID NOT FOUND", movie);
 				return new ModelMap("response", responseMessage);
 			}
+		} else {
+			responseMessage = new ResponseMessage("updateMovie", 400, "IN CORRECT MOVIE ID", "ID NOT FOUND", movie);
+			return new ModelMap("response", responseMessage);
+		}
 
+		if (!verifyRating(movie.getRating())) {
+			responseMessage = new ResponseMessage("updateMovie", 400, "NOT UPDATED",
+					"Incorrect rating, Should be in rang( 0.5 to 5.0)", movie);
+			return new ModelMap("response", responseMessage);
 		}
 
 		MovieTO movieTo = movieService.update(movie);
