@@ -4,12 +4,15 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.movieapp.model.MovieTO;
 import com.movieapp.service.MovieService;
 
+@RunWith(SpringRunner.class)
 @SpringBootTest
 class MovieApplicationTests {
 
@@ -77,13 +80,94 @@ class MovieApplicationTests {
 	}
 	
 	@Test
-	void thow_xception_if_rating_Not_between_0_to_5() {
+	void thow_Exception_if_rating_Not_between_0_to_5() {
 		try {
 			MovieTO movie = new MovieTO(1, "movie_8", "Category_3", 8);
-			MovieTO movieResponse = movieservice.save(movie);
+			movieservice.save(movie);
 			Assert.assertTrue(false);
 		} catch (Exception e) {
 			Assert.assertTrue(true);
+		}
+	}
+	
+
+	@Test
+	void thow_Exception_if_rating_LestThan_Half() {
+		try {
+			MovieTO movie = new MovieTO(1, "movie_8", "Category_3", 0.4);
+			movieservice.save(movie);
+			Assert.assertTrue(false);
+		} catch (Exception e) {
+			Assert.assertTrue(true);
+		}
+	}
+	
+	
+	@Test
+	void thowExceptionOnAddNewMovieIfCategoryIsEmpty() {
+		try {
+			MovieTO movie = new MovieTO(1, "movie_8", null, 8);
+			movieservice.save(movie);
+			Assert.assertTrue(false);
+		} catch (Exception e) {
+			Assert.assertTrue(true);
+		}
+	}
+	
+
+	@Test
+	void thowExceptionOnUpdateMovieIfCategoryIsEmpty() {
+		try {
+			MovieTO movie = new MovieTO(1, "movie_8", null, 4);
+			movieservice.update(movie);
+			Assert.assertTrue(false);
+		} catch (Exception e) {
+			Assert.assertTrue(true);
+		}
+	}
+	
+	@Test
+	void thowExceptionOnAddNewMovieIfTitleIsEmpty() {
+		try {
+			MovieTO movie = new MovieTO(1, null, "Category", 4);
+			movieservice.save(movie);
+			Assert.assertTrue(false);
+		} catch (Exception e) {
+			Assert.assertTrue(true);
+		}
+	}
+	
+
+	@Test
+	void thowExceptionOnUpdateMovieIfTitleIsEmpty() {
+		try {
+			MovieTO movie = new MovieTO(1, null, "Category", 8);
+			movieservice.update(movie);
+			Assert.assertTrue(false);
+		} catch (Exception e) {
+			Assert.assertTrue(true);
+		}
+	}
+	
+	@Test
+	void thowExceptionOnUpdateMovieWithNoID() {
+		try {
+			MovieTO movie = new MovieTO(null, "movie", "Category", 5);
+			movieservice.update(movie);
+			Assert.assertTrue(false);
+		} catch (Exception e) {
+			Assert.assertTrue(true);
+		}
+	}
+
+	@Test
+	void CreateNewMovieWithNoId() {
+		try {
+			MovieTO movie = new MovieTO(null, "Title", "Category", 5);
+			movieservice.save(movie);
+			Assert.assertTrue(true);
+		} catch (Exception e) {
+			Assert.assertTrue(false);
 		}
 	}
 }

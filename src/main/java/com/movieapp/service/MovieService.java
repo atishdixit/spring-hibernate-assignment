@@ -21,6 +21,7 @@ import com.movieapp.repository.MovieRepository;
 public class MovieService implements BaseService<MovieTO> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MovieService.class);
+	private String fieldStatusMsg = null;;
 
 	@Autowired
 	private MovieRepository movieRepository;
@@ -45,8 +46,9 @@ public class MovieService implements BaseService<MovieTO> {
 	@Override
 	public MovieTO save(MovieTO movie) {
 		LOGGER.info("Inside save Movie method ::");
-		if (!verifyRating(movie.getRating())) {
-			throw new IllegalArgumentException("Rating should be in Range [0.5 to 5]");
+
+		if (!verfyFields(movie)) {
+			throw new IllegalArgumentException(fieldStatusMsg);
 		}
 
 		MovieEntity appDetailEntity = movieRepository.save(ConverterUtility.convertMovieToToMovieEntity(movie));
@@ -83,8 +85,8 @@ public class MovieService implements BaseService<MovieTO> {
 	public MovieTO update(MovieTO movieTo) {
 		LOGGER.info("Inside update method ::");
 
-		if (!verifyRating(movieTo.getRating())) {
-			throw new IllegalArgumentException("Rating should be in Range [0.5 to 5]");
+		if (!verfyFields(movieTo)) {
+			throw new IllegalArgumentException(fieldStatusMsg);
 		}
 
 		MovieEntity movie = movieRepository.getOne(movieTo.getId());
@@ -108,5 +110,22 @@ public class MovieService implements BaseService<MovieTO> {
 	 */
 	private boolean verifyRating(double rating) {
 		return ((rating >= 0.5) && (rating <= 5.0));
+	}
+
+	private boolean verfyFields(MovieTO movie) {
+		boolean fieldStatus = true;
+		if (!verifyRating(movie.getRating())) {
+			fieldStatusMsg = "Rating should be in Range [0.5 to 5]";
+			fieldStatus = false;
+		} else if (movie.getCategory() == null || movie.getCategory().length() < 0) {
+			fieldStatusMsg = "Category can not empty ";
+			fieldStatus = false;
+		} else if (movie.getTitle() == null || movie.getTitle().length() < 0) {
+			fieldStatusMsg = "Title can not empty ";
+			fieldStatus = false;
+		}
+
+		return fieldStatus;
+
 	}
 }
