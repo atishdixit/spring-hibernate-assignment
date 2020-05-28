@@ -75,10 +75,10 @@ class MovieApplicationTests {
 			movieservice.getMovie(2001);
 			Assert.assertTrue(false);
 		} catch (Exception e) {
-			Assert.assertTrue(true); 
+			Assert.assertTrue(true);
 		}
 	}
-	
+
 	@Test
 	void thow_Exception_if_rating_Not_between_0_to_5() {
 		try {
@@ -89,7 +89,6 @@ class MovieApplicationTests {
 			Assert.assertTrue(true);
 		}
 	}
-	
 
 	@Test
 	void thow_Exception_if_rating_LestThan_Half() {
@@ -101,8 +100,7 @@ class MovieApplicationTests {
 			Assert.assertTrue(true);
 		}
 	}
-	
-	
+
 	@Test
 	void thowExceptionOnAddNewMovieIfCategoryIsEmpty() {
 		try {
@@ -113,7 +111,6 @@ class MovieApplicationTests {
 			Assert.assertTrue(true);
 		}
 	}
-	
 
 	@Test
 	void thowExceptionOnUpdateMovieIfCategoryIsEmpty() {
@@ -125,7 +122,7 @@ class MovieApplicationTests {
 			Assert.assertTrue(true);
 		}
 	}
-	
+
 	@Test
 	void thowExceptionOnAddNewMovieIfTitleIsEmpty() {
 		try {
@@ -136,7 +133,6 @@ class MovieApplicationTests {
 			Assert.assertTrue(true);
 		}
 	}
-	
 
 	@Test
 	void thowExceptionOnUpdateMovieIfTitleIsEmpty() {
@@ -148,7 +144,7 @@ class MovieApplicationTests {
 			Assert.assertTrue(true);
 		}
 	}
-	
+
 	@Test
 	void thowExceptionOnUpdateMovieWithNoID() {
 		try {
